@@ -1,0 +1,3 @@
+[console_scripts]
+bluerov2_sensors = intro_to_ros.bluerov2_sensors:main
+publisher = intro_to_ros.publisher:main

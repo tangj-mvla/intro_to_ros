@@ -1,0 +1,139 @@
+[0.000000] (-) TimerEvent: {}
+[0.001356] (intro_to_ros) JobQueued: {'identifier': 'intro_to_ros', 'dependencies': OrderedDict()}
+[0.003206] (intro_to_ros) JobStarted: {'identifier': 'intro_to_ros'}
+[0.099153] (-) TimerEvent: {}
+[0.200131] (-) TimerEvent: {}
+[0.301394] (-) TimerEvent: {}
+[0.402805] (-) TimerEvent: {}
+[0.503614] (-) TimerEvent: {}
+[0.604271] (-) TimerEvent: {}
+[0.705030] (-) TimerEvent: {}
+[0.805628] (-) TimerEvent: {}
+[0.906240] (-) TimerEvent: {}
+[1.006948] (-) TimerEvent: {}
+[1.107613] (-) TimerEvent: {}
+[1.208186] (-) TimerEvent: {}
+[1.308950] (-) TimerEvent: {}
+[1.411078] (-) TimerEvent: {}
+[1.511999] (-) TimerEvent: {}
+[1.612979] (-) TimerEvent: {}
+[1.715267] (-) TimerEvent: {}
+[1.816005] (-) TimerEvent: {}
+[1.919129] (-) TimerEvent: {}
+[2.019906] (-) TimerEvent: {}
+[2.121177] (-) TimerEvent: {}
+[2.221895] (-) TimerEvent: {}
+[2.323022] (-) TimerEvent: {}
+[2.425672] (-) TimerEvent: {}
+[2.526385] (-) TimerEvent: {}
+[2.627721] (-) TimerEvent: {}
+[2.728312] (-) TimerEvent: {}
+[2.828909] (-) TimerEvent: {}
+[2.930671] (-) TimerEvent: {}
+[3.031709] (-) TimerEvent: {}
+[3.134964] (-) TimerEvent: {}
+[3.236182] (-) TimerEvent: {}
+[3.336785] (-) TimerEvent: {}
+[3.437356] (-) TimerEvent: {}
+[3.538027] (-) TimerEvent: {}
+[3.638648] (-) TimerEvent: {}
+[3.740124] (-) TimerEvent: {}
+[3.840784] (-) TimerEvent: {}
+[3.942069] (-) TimerEvent: {}
+[4.042806] (-) TimerEvent: {}
+[4.143712] (-) TimerEvent: {}
+[4.245943] (-) TimerEvent: {}
+[4.346594] (-) TimerEvent: {}
+[4.447296] (-) TimerEvent: {}
+[4.547992] (-) TimerEvent: {}
+[4.648660] (-) TimerEvent: {}
+[4.750798] (-) TimerEvent: {}
+[4.852405] (-) TimerEvent: {}
+[4.953162] (-) TimerEvent: {}
+[5.054607] (-) TimerEvent: {}
+[5.155668] (-) TimerEvent: {}
+[5.256300] (-) TimerEvent: {}
+[5.357456] (-) TimerEvent: {}
+[5.459627] (-) TimerEvent: {}
+[5.562851] (-) TimerEvent: {}
+[5.566184] (intro_to_ros) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/home/joshuatang/auvc_ws/src/intro_to_ros/build/intro_to_ros/build', '--no-deps', 'symlink_data'], 'cwd': '/home/joshuatang/auvc_ws/src/intro_to_ros/build/intro_to_ros', 'env': {'USER': 'joshuatang', 'SSH_CLIENT': '169.254.220.80 49242 22', 'WORKON_HOME': '/home/joshuatang/.virtualenvs', 'GZ_CONFIG_PATH': '/opt/ros/jazzy/opt/gz_sim_vendor/share/gz:/opt/ros/jazzy/opt/sdformat_vendor/share/gz:/opt/ros/jazzy/opt/gz_gui_vendor/share/gz:/opt/ros/jazzy/opt/gz_transport_vendor/share/gz:/opt/ros/jazzy/opt/gz_rendering_vendor/share/gz:/opt/ros/jazzy/opt/gz_plugin_vendor/share/gz:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/share/gz:/opt/ros/jazzy/opt/gz_msgs_vendor/share/gz:/opt/ros/jazzy/opt/gz_common_vendor/share/gz', 'XDG_SESSION_TYPE': 'tty', 'GIT_ASKPASS': '/home/joshuatang/.vscode-server/cli/servers/Stable-f1e16e1e6214d7c44d078b1f0607b2388f29d729/server/extensions/git/dist/askpass.sh', 'SHLVL': '2', 'BROWSER': '/home/joshuatang/.vscode-server/cli/servers/Stable-f1e16e1e6214d7c44d078b1f0607b2388f29d729/server/bin/helpers/browser.sh', 'LD_LIBRARY_PATH': '/opt/ros/jazzy/opt/gz_sim_vendor/lib:/opt/ros/jazzy/opt/gz_sensors_vendor/lib:/opt/ros/jazzy/opt/gz_physics_vendor/lib:/opt/ros/jazzy/opt/sdformat_vendor/lib:/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/aarch64-linux-gnu:/opt/ros/jazzy/opt/gz_gui_vendor/lib:/opt/ros/jazzy/opt/gz_transport_vendor/lib:/opt/ros/jazzy/opt/gz_rendering_vendor/lib:/opt/ros/jazzy/opt/gz_plugin_vendor/lib:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/lib:/opt/ros/jazzy/opt/gz_msgs_vendor/lib:/opt/ros/jazzy/opt/gz_common_vendor/lib:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_tools_vendor/lib:/opt/ros/jazzy/opt/gz_ogre_next_vendor/lib:/opt/ros/jazzy/opt/gz_dartsim_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib', 'HOME': '/home/joshuatang', 'OLDPWD': '/home/joshuatang/auvc_ws/src/intro_to_ros', 'LESS': '-R', 'VIRTUALENVWRAPPER_PYTHON': '/usr/bin/python3', 'TERM_PROGRAM_VERSION': '1.91.1', 'VSCODE_IPC_HOOK_CLI': '/run/user/1004/vscode-ipc-707abe5f-3835-4066-96b3-fb0bddfe24dc.sock', 'ZSH': '/home/joshuatang/.oh-my-zsh', 'LSCOLORS': 'Gxfxcxdxbxegedabagacad', 'VSCODE_GIT_ASKPASS_MAIN': '/home/joshuatang/.vscode-server/cli/servers/Stable-f1e16e1e6214d7c44d078b1f0607b2388f29d729/server/extensions/git/dist/askpass-main.js', 'PAGER': 'less', 'ROS_PYTHON_VERSION': '3', 'SSL_CERT_FILE': '/usr/lib/ssl/cert.pem', 'VSCODE_GIT_ASKPASS_NODE': '/home/joshuatang/.vscode-server/cli/servers/Stable-f1e16e1e6214d7c44d078b1f0607b2388f29d729/server/node', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1004/bus', 'COLORTERM': 'truecolor', 'ROS_DISTRO': 'jazzy', 'COLCON_PREFIX_PATH': '/home/joshuatang/auvc_ws/install', 'LOGNAME': 'joshuatang', '_': '/usr/bin/colcon', 'XDG_SESSION_CLASS': 'user', 'USER_ZDOTDIR': '/home/joshuatang', 'ROS_VERSION': '2', 'XDG_SESSION_ID': '3', 'TERM': 'xterm-256color', 'PATH': '/home/joshuatang/.local/bin:/opt/ros/jazzy/opt/gz_msgs_vendor/bin:/opt/ros/jazzy/opt/gz_tools_vendor/bin:/opt/ros/jazzy/opt/gz_ogre_next_vendor/bin:/opt/ros/jazzy/bin:/home/joshuatang/.vscode-server/cli/servers/Stable-f1e16e1e6214d7c44d078b1f0607b2388f29d729/server/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/joshuatang/ardupilot/TARGET_DIR/gcc-arm-none-eabi-10-2020-q4-major/bin', 'XDG_RUNTIME_DIR': '/run/user/1004', 'SSL_CERT_DIR': '/usr/lib/ssl/certs', 'LANG': 'en_US.UTF-8', 'VSCODE_INJECTION': '1', 'TERM_PROGRAM': 'vscode', 'VSCODE_GIT_IPC_HANDLE': '/run/user/1004/vscode-git-b6cbcfd2c0.sock', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'AMENT_PREFIX_PATH': '/home/joshuatang/auvc_ws/install/intro_to_ros:/opt/ros/jazzy', 'SHELL': '/usr/bin/zsh', 'VSCODE_GIT_ASKPASS_EXTRA_ARGS': '', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'PWD': '/home/joshuatang/auvc_ws/src/intro_to_ros/build/intro_to_ros', 'LC_ALL': 'en_US.UTF-8', 'SSH_CONNECTION': '169.254.220.80 49242 169.254.193.89 22', 'ZDOTDIR': '/home/joshuatang', 'PYTHONPATH': '/home/joshuatang/auvc_ws/src/intro_to_ros/build/intro_to_ros/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/joshuatang/auvc_ws/src/intro_to_ros/install/intro_to_ros/lib/python3.12/site-packages:/home/joshuatang/auvc_ws/build/intro_to_ros:/home/joshuatang/auvc_ws/install/intro_to_ros/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages', 'COLCON': '1', 'CMAKE_PREFIX_PATH': '/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor'}, 'shell': False}
+[5.665932] (-) TimerEvent: {}
+[5.768235] (-) TimerEvent: {}
+[5.869146] (-) TimerEvent: {}
+[5.970635] (-) TimerEvent: {}
+[6.071401] (-) TimerEvent: {}
+[6.172617] (-) TimerEvent: {}
+[6.276181] (-) TimerEvent: {}
+[6.377005] (-) TimerEvent: {}
+[6.477651] (-) TimerEvent: {}
+[6.578226] (-) TimerEvent: {}
+[6.680672] (-) TimerEvent: {}
+[6.782813] (-) TimerEvent: {}
+[6.884113] (-) TimerEvent: {}
+[6.984923] (-) TimerEvent: {}
+[7.085641] (-) TimerEvent: {}
+[7.186984] (-) TimerEvent: {}
+[7.287747] (-) TimerEvent: {}
+[7.388749] (-) TimerEvent: {}
+[7.490950] (-) TimerEvent: {}
+[7.591781] (-) TimerEvent: {}
+[7.692560] (-) TimerEvent: {}
+[7.793227] (-) TimerEvent: {}
+[7.808043] (intro_to_ros) StdoutLine: {'line': b'running develop\n'}
+[7.809265] (intro_to_ros) StderrLine: {'line': b'/usr/lib/python3/dist-packages/setuptools/command/develop.py:40: EasyInstallDeprecationWarning: easy_install command is deprecated.\n'}
+[7.809988] (intro_to_ros) StderrLine: {'line': b'!!\n'}
+[7.810501] (intro_to_ros) StderrLine: {'line': b'\n'}
+[7.811067] (intro_to_ros) StderrLine: {'line': b'        ********************************************************************************\n'}
+[7.811463] (intro_to_ros) StderrLine: {'line': b'        Please avoid running ``setup.py`` and ``easy_install``.\n'}
+[7.813320] (intro_to_ros) StderrLine: {'line': b'        Instead, use pypa/build, pypa/installer or other\n'}
+[7.814074] (intro_to_ros) StderrLine: {'line': b'        standards-based tools.\n'}
+[7.814644] (intro_to_ros) StderrLine: {'line': b'\n'}
+[7.815383] (intro_to_ros) StderrLine: {'line': b'        See https://github.com/pypa/setuptools/issues/917 for details.\n'}
+[7.816144] (intro_to_ros) StderrLine: {'line': b'        ********************************************************************************\n'}
+[7.816700] (intro_to_ros) StderrLine: {'line': b'\n'}
+[7.817390] (intro_to_ros) StderrLine: {'line': b'!!\n'}
+[7.817908] (intro_to_ros) StderrLine: {'line': b'  easy_install.initialize_options(self)\n'}
+[7.893933] (-) TimerEvent: {}
+[7.994929] (-) TimerEvent: {}
+[8.095650] (-) TimerEvent: {}
+[8.196612] (-) TimerEvent: {}
+[8.297248] (-) TimerEvent: {}
+[8.397992] (-) TimerEvent: {}
+[8.498619] (-) TimerEvent: {}
+[8.599319] (-) TimerEvent: {}
+[8.700142] (-) TimerEvent: {}
+[8.801288] (-) TimerEvent: {}
+[8.902139] (-) TimerEvent: {}
+[9.003367] (-) TimerEvent: {}
+[9.104030] (-) TimerEvent: {}
+[9.204690] (-) TimerEvent: {}
+[9.305342] (-) TimerEvent: {}
+[9.406327] (-) TimerEvent: {}
+[9.495857] (intro_to_ros) StdoutLine: {'line': b'running egg_info\n'}
+[9.506465] (-) TimerEvent: {}
+[9.607113] (-) TimerEvent: {}
+[9.642155] (intro_to_ros) StdoutLine: {'line': b'writing intro_to_ros.egg-info/PKG-INFO\n'}
+[9.646684] (intro_to_ros) StdoutLine: {'line': b'writing dependency_links to intro_to_ros.egg-info/dependency_links.txt\n'}
+[9.650654] (intro_to_ros) StdoutLine: {'line': b'writing entry points to intro_to_ros.egg-info/entry_points.txt\n'}
+[9.651467] (intro_to_ros) StdoutLine: {'line': b'writing requirements to intro_to_ros.egg-info/requires.txt\n'}
+[9.652193] (intro_to_ros) StdoutLine: {'line': b'writing top-level names to intro_to_ros.egg-info/top_level.txt\n'}
+[9.707267] (-) TimerEvent: {}
+[9.807942] (-) TimerEvent: {}
+[9.909183] (-) TimerEvent: {}
+[9.970921] (intro_to_ros) StdoutLine: {'line': b"reading manifest file 'intro_to_ros.egg-info/SOURCES.txt'\n"}
+[9.974610] (intro_to_ros) StdoutLine: {'line': b"writing manifest file 'intro_to_ros.egg-info/SOURCES.txt'\n"}
+[10.009327] (-) TimerEvent: {}
+[10.110901] (-) TimerEvent: {}
+[10.116733] (intro_to_ros) StdoutLine: {'line': b'running build_ext\n'}
+[10.118553] (intro_to_ros) StdoutLine: {'line': b'Creating /home/joshuatang/auvc_ws/src/intro_to_ros/install/intro_to_ros/lib/python3.12/site-packages/intro-to-ros.egg-link (link to .)\n'}
+[10.121461] (intro_to_ros) StdoutLine: {'line': b'Installing bluerov2_sensors script to /home/joshuatang/auvc_ws/src/intro_to_ros/install/intro_to_ros/lib/intro_to_ros\n'}
+[10.124309] (intro_to_ros) StdoutLine: {'line': b'Installing publisher script to /home/joshuatang/auvc_ws/src/intro_to_ros/install/intro_to_ros/lib/intro_to_ros\n'}
+[10.125088] (intro_to_ros) StdoutLine: {'line': b'\n'}
+[10.125752] (intro_to_ros) StdoutLine: {'line': b'Installed /home/joshuatang/auvc_ws/src/intro_to_ros/build/intro_to_ros\n'}
+[10.132804] (intro_to_ros) StdoutLine: {'line': b'running symlink_data\n'}
+[10.211334] (-) TimerEvent: {}
+[10.313633] (-) TimerEvent: {}
+[10.348491] (intro_to_ros) CommandEnded: {'returncode': 0}
+[10.414214] (-) TimerEvent: {}
+[10.424726] (intro_to_ros) JobEnded: {'identifier': 'intro_to_ros', 'rc': 0}
+[10.430021] (-) EventReactorShutdown: {}
