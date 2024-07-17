@@ -2,7 +2,7 @@
 
 import rclpy
 from rclpy.node import Node
-# from geometry_msgs.msg import Vector3
+
 from sensor_msgs.msg import Imu
 from sensor_msgs.msg import BatteryState
 from sensor_msgs.msg import FluidPressure
@@ -15,52 +15,38 @@ class bluerov2_sensors(Node):
         initializes node
         '''
         super().__init__("bluerov2_sensors")
-        self.battery = self.create_subscription(
-            BatteryState,
-            "/mavros/battery",
-            self.battery_callback,
-            QoSProfile(
+        qosProfile = QoSProfile(
             history=QoSHistoryPolicy.KEEP_LAST,
             depth=10,
             reliability=QoSReliabilityPolicy.BEST_EFFORT,
             durability=QoSDurabilityPolicy.VOLATILE
         )
+        self.battery = self.create_subscription(
+            BatteryState,
+            "/mavros/battery",
+            self.battery_callback,
+            qosProfile
         )
         self.battery
         self.imu = self.create_subscription(
             Imu,
             "/mavros/imu/data",
             self.imu_callback,
-            QoSProfile(
-            history=QoSHistoryPolicy.KEEP_LAST,
-            depth=10,
-            reliability=QoSReliabilityPolicy.BEST_EFFORT,
-            durability=QoSDurabilityPolicy.VOLATILE
-        )
+            qosProfile
         )
         self.imu
         self.static_pressure = self.create_subscription(
             FluidPressure,
             "/mavros/imu/static_pressure",
             self.static_pressure_callback,
-            QoSProfile(
-            history=QoSHistoryPolicy.KEEP_LAST,
-            depth=10,
-            reliability=QoSReliabilityPolicy.BEST_EFFORT,
-            durability=QoSDurabilityPolicy.VOLATILE
-            )
+            qosProfile
         )
         self.static_pressure
         self.diff_pressure = self.create_subscription(
             FluidPressure,
             "/mavros/imu/diff_pressure",
             self.diff_pressure_callback,
-            QoSProfile(
-            history=QoSHistoryPolicy.KEEP_LAST,
-            depth=10,
-            reliability=QoSReliabilityPolicy.BEST_EFFORT,
-            durability=QoSDurabilityPolicy.VOLATILE
-            )
+            qosProfile
         )
         self.diff_pressure
         self.get_logger().info("starting subscriber node")
@@ -99,13 +85,19 @@ class bluerov2_sensors(Node):
         '''
         self.static_pressure_param = msg
         self.get_logger().info(f"Static Pressure\n\tStatic Pressure: {msg.fluid_pressure}\n")
+        self.get_logger().info(f"Depth: {self.depth_calculation(msg.fluid_pressure)}\n")
+    
+    def depth_calculation(self, pressure):
+        return (pressure-101325)/9.81/1000
 
     def diff_pressure_callback(self,msg):
         '''
         diff pressure callback, logs and sets diff pressure
+
+        msg is the message
         '''
         self.diff_pressure_param = msg
-        self.get_logger().info(f"Diff Pressure\n\tDiff Pressure{msg.fluid_pressure}\n")
+        self.get_logger().info(f"Diff Pressure\n\tDiff Pressure: {msg.fluid_pressure}\n")
 
     def timer_callback(self):
         '''
