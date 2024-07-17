@@ -5,6 +5,7 @@ from rclpy.node import Node
 # from geometry_msgs.msg import Vector3
 from sensor_msgs.msg import Imu
 from sensor_msgs.msg import BatteryState
+from sensor_msgs.msg import FluidPressure
 from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSReliabilityPolicy, QoSDurabilityPolicy
 
 
@@ -38,11 +39,37 @@ class bluerov2_sensors(Node):
         )
         )
         self.imu
+        self.static_pressure = self.create_subscription(
+            FluidPressure,
+            "/mavros/imu/static_pressure",
+            self.static_pressure_callback,
+            QoSProfile(
+            history=QoSHistoryPolicy.KEEP_LAST,
+            depth=10,
+            reliability=QoSReliabilityPolicy.BEST_EFFORT,
+            durability=QoSDurabilityPolicy.VOLATILE
+            )
+        )
+        self.static_pressure
+        self.diff_pressure = self.create_subscription(
+            FluidPressure,
+            "/mavros/imu/diff_pressure",
+            self.diff_pressure_callback,
+            QoSProfile(
+            history=QoSHistoryPolicy.KEEP_LAST,
+            depth=10,
+            reliability=QoSReliabilityPolicy.BEST_EFFORT,
+            durability=QoSDurabilityPolicy.VOLATILE
+            )
+        )
+        self.diff_pressure
         self.get_logger().info("starting subscriber node")
 
 
         self.battery_param = BatteryState()
         self.imu_param = Imu()
+        self.static_pressure_param = FluidPressure()
+        self.diff_pressure_param = FluidPressure()
 
         self.timer = self.create_timer(5, self.timer_callback)
 
@@ -63,6 +90,22 @@ class bluerov2_sensors(Node):
         '''
         self.imu_param = msg
         self.get_logger().info(f"IMU\n\tAcceleration: {msg.linear_acceleration}\n")
+
+    def static_pressure_callback(self,msg):
+        '''
+        static pressure callback, logs and sets static pressure
+        
+        msg is the message
+        '''
+        self.static_pressure_param = msg
+        self.get_logger().info(f"Static Pressure\n\tStatic Pressure: {msg.fluid_pressure}\n")
+
+    def diff_pressure_callback(self,msg):
+        '''
+        diff pressure callback, logs and sets diff pressure
+        '''
+        self.diff_pressure_param = msg
+        self.get_logger().info(f"Diff Pressure\n\tDiff Pressure{msg.fluid_pressure}\n")
 
     def timer_callback(self):
         '''
