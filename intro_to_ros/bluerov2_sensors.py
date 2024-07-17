@@ -104,7 +104,7 @@ class bluerov2_sensors(Node):
         imter callback, checks if voltage is too low
         '''
         voltage = self.battery_param.voltage
-        if voltage < 5.0:
+        if voltage < 12.0:
             self.get_logger().info("WARNING: Voltage below safe level")
         
 
