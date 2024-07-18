@@ -7,7 +7,13 @@ from mavros_msgs.srv import CommandBool
 from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSReliabilityPolicy, QoSDurabilityPolicy
 
 class Arm(Node):
+    '''
+    Node to arm and disarm ROV'''
     def __init__(self):
+        '''
+        Initializes node, cals inherited Node class
+        Creates client, then waits for service request
+        '''
         super().__init__("ARM")
         self.cli = self.create_client(CommandBool,'/mavros/cmd/arming')
         while not self.cli.wait_for_service(timeout_sec = 1.0):
@@ -15,6 +21,10 @@ class Arm(Node):
         self.req = CommandBool.Request()
 
     def arm_request(self, value):
+        '''
+        Arming Request, assigns value to request
+        asynchronously calls
+        '''
         self.req.value = value
         self.future = self.cli.call_async(self.req)
         return self.future
@@ -30,21 +40,19 @@ def main(args = None):
         arm(node, False)
         print("\nKeyboardInterrupt received, shutting down...")
     finally:
-        # future = node.arm_request(False)
-        # rclpy.spin_until_future_complete(node = node, future = future)
-        # response = future.result()
-        # node.get_logger().info('Robot has been DISARMED')
-        # print("\nKeyboardInterrupt received, shutting down...")
-        # arm(node,False)
         node.destroy_node()
         if rclpy.ok():
             rclpy.shutdown()
 
 def arm(node,value):
+    '''
+    refactor of code, takes in value and requests service
+    
+    value: boolean in true or false
+    '''
     future = node.arm_request(value)
     rclpy.spin_until_future_complete(node, future)
     response = future.result()
-    # node.get_logger().info(str(response.success))
     if (value): 
         node.get_logger().info("Robot has been ARMED")
     if (not value): 
