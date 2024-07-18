@@ -32,17 +32,12 @@ class Arm(Node):
 def main(args = None):
     rclpy.init(args=args)
     node = Arm()
-    
-    try:
-        arm(node,True)
-        rclpy.spin(node)
-    except KeyboardInterrupt:
-        arm(node, False)
-        print("\nKeyboardInterrupt received, shutting down...")
-    finally:
-        node.destroy_node()
-        if rclpy.ok():
-            rclpy.shutdown()
+    arm(node,True)
+    time.sleep(5)
+    arm(node,False)
+    node.destroy_node()
+    if rclpy.ok():
+        rclpy.shutdown()
 
 def arm(node,value):
     '''
