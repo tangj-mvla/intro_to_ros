@@ -23,6 +23,7 @@ setup(
 # 'subscriber = intro_to_ros.subscriber:main',
 'bluerov2_sensors = intro_to_ros.bluerov2_sensors:main',
 'arm = intro_to_ros.arm:main',
+'movement = intro_to_ros.movement:main'
         ],
     },
 )

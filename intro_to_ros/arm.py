@@ -33,8 +33,9 @@ def main(args = None):
     rclpy.init(args=args)
     node = Arm()
     arm(node,True)
-    time.sleep(5)
-    arm(node,False)
+    rclpy.spin(node)
+    # time.sleep(5)
+    # arm(node,False)
     node.destroy_node()
     if rclpy.ok():
         rclpy.shutdown()
