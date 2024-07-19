@@ -29,8 +29,8 @@ class Movement(Node):
     def override_node(self):
         msg = OverrideRCIn()
         
-        msg.channels = [OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,1900,
-                        OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,
+        msg.channels = [OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,
+                        OverrideRCIn.CHAN_NOCHANGE,1900,OverrideRCIn.CHAN_NOCHANGE,
                         OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,
                         OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,
                         OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,
