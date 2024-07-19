@@ -3,7 +3,7 @@
 import rclpy
 import time
 from rclpy.node import Node
-from mavros_msgs.msg import OverrideRCIn
+from mavros_msgs.msg import OverrideRCIn, RCIn, RCOut
 from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy, HistoryPolicy
 
 class Movement(Node):
@@ -22,18 +22,28 @@ class Movement(Node):
         )
         self.get_logger().info("starting publish")
         self.publisher_timer = self.create_timer(
-            5.0, self.run_node
+            5.0, self.override_node
         )
 
     
-    def run_node(self):
-        channels = [1900,1900,1500,1500,1500,1500,
-                    OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,
-                    OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,
-                    OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,
-                    OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,]
-        self.publisher.publish(channels)
-        self.get_logger().info(f"Inputs: {channels[0]}, {channels[1]}")
+    def override_node(self):
+        msg = OverrideRCIn()
+        
+        msg.channels = [OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,1900,
+                        OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,
+                        OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,
+                        OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,
+                        OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,
+                        OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE,OverrideRCIn.CHAN_NOCHANGE]
+        # msg.channels = [1000,1100,1200,1300,1400,1500,1600,1700]
+        # msg.rssi = 0
+        self.publisher.publish(msg)
+        self.get_logger().info(f"Inputs: {msg.channels[0]}, {msg.channels[1]}")
+
+        # forward: channel 5
+        # rotate: channel 4
+        # strafe: channel 6
+        # up/down: channel 3
 
 def main(args=None):
     rclpy.init(args=args)
