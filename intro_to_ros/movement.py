@@ -4,17 +4,18 @@ import rclpy
 import time
 from rclpy.node import Node
 from mavros_msgs.msg import OverrideRCIn, RCIn, RCOut
-from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy, HistoryPolicy
+from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy, HistoryPolicy, QoSHistoryPolicy, QoSReliabilityPolicy, QoSDurabilityPolicy
 
 class Movement(Node):
     def __init__(self):
         super().__init__("movement")
         qos_profile = QoSProfile(
-            reliability=ReliabilityPolicy.RELIABLE,
-            durability=DurabilityPolicy.TRANSIENT_LOCAL,
-            history=HistoryPolicy.KEEP_LAST,
-            depth=1
+            history=QoSHistoryPolicy.KEEP_LAST,
+            depth=10,
+            reliability=QoSReliabilityPolicy.RELIABLE,
+            durability=QoSDurabilityPolicy.VOLATILE
         )
+
         self.publisher = self.create_publisher(
             OverrideRCIn,
             "/mavros/rc/override",
