@@ -19,41 +19,53 @@ class Movement(Node):
         self.publisher = self.create_publisher(
             OverrideRCIn,
             "/mavros/rc/override",
-            10
+            qos_profile
         )
         self.get_logger().info("starting publish")
+        # self.publisher_timer = self.create_timer(
+        #         1.0, self.roll(2000)
+        # )
         
         self.get_logger().info("SUBSCRIBERS: " + str(self.publisher.get_subscription_count()))
-
-    
-    def roll(self, pwm):
+                               
+    def roll(self, pwm, t):
         msg = OverrideRCIn()
         msg.channels = [OverrideRCIn.CHAN_NOCHANGE] * 18
         msg.channels[1] = pwm
         self.publisher.publish(msg)
+        time.sleep(t)
 
-    def vertical(self, pwm):
+    def vertical(self, pwm, t):
         msg = OverrideRCIn()
         msg.channels = [OverrideRCIn.CHAN_NOCHANGE] * 18
         msg.channels[2] = pwm
         self.publisher.publish(msg)
+        time.sleep(t)
 
-    def yaw(self, pwm):
+    def yaw(self, pwm, t):
         msg = OverrideRCIn()
         msg.channels = [OverrideRCIn.CHAN_NOCHANGE] * 18
         msg.channels[3] = pwm
         self.publisher.publish(msg)
+        time.sleep(t)
 
-    def forward(self, pwm):
+    def forward(self, pwm, t):
         msg = OverrideRCIn()
         msg.channels = [OverrideRCIn.CHAN_NOCHANGE] * 18
         msg.channels[4] = pwm
         self.publisher.publish(msg)
+        time.sleep(t)
 
-    def strafe(self, pwm):
+    def strafe(self, pwm, t):
         msg = OverrideRCIn()
         msg.channels = [OverrideRCIn.CHAN_NOCHANGE] * 18
         msg.channels[5] = pwm
+        self.publisher.publish(msg)
+        time.sleep(t)
+
+    def neutral(self):
+        msg = OverrideRCIn()
+        msg.channels = [1500] * 18
         self.publisher.publish(msg)
 
     def override_node(self):
@@ -76,20 +88,56 @@ class Movement(Node):
         # forward: channel 5
         # strafe: channel 6
 
-    def callback(self, msg):
-        try: 
-            self.publisher.publish(msg)
-        except:
-            pass
+def hot(node):
+    node.rotate(1300,0.6)
+
+def cross(node):   
+    node.rotate(1700,0.6)
+
+def buns(node):
+    node.rotate(1300,1.2)
+
+
+def hotCrossBuns(node):
+    node.
+    pass
+
+def pennies(node):
+    
+    pass
+
+def children(node):
+    node.roll(1700,0.6)
+    pass
+
+def rave(node):
+    
+    pass
 
 def main(args=None):
     rclpy.init(args=args)
+
     node = Movement()
+    # beginning
+    node.strafe(1700,1)
+    node.strafe(1300,1)
+    node.strafe(1700,1)
+    node.strafe(1300,1)
+    node.strafe(1700,1)
+    node.strafe(1300,1)
+    node.strafe(1700,1)
+    node.strafe(1300,1)
+    node.strafe(1700,1)
+    node.strafe(1300,0.3)
+    
+    # hot cross buns funciton
+
+    node.neutral()
+    
+    #  node.strafe(1700)
+    # node.neutral()
     # node.forward(2000)
     # time.sleep(5)
-    node.publisher_timer = node.create_timer(
-            1.0, node.override_node
-    )
     # node.destroy_node()
     # if rclpy.ok():
     #     rclpy.shutdown()
@@ -98,6 +146,7 @@ def main(args=None):
     except KeyboardInterrupt:
         print("\nKeyboardInterrupt received, shutting down...")
     finally:
+        print ("shutting down")
         node.destroy_node()
         if rclpy.ok():
             rclpy.shutdown()
