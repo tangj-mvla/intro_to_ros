@@ -33,7 +33,14 @@ def main(args = None):
     rclpy.init(args=args)
     node = Arm()
     arm(node,True)
-    rclpy.spin(node)
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        print("\nKeyboardInterrupt received, shutting down...")
+    finally:
+        node.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()
     # time.sleep(5)
     # arm(node,False)
     node.destroy_node()
