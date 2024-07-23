@@ -4,6 +4,7 @@ import rclpy
 import time
 from rclpy.node import Node
 from mavros_msgs.srv import CommandBool
+from std_srvs.srv import SetBool
 from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSReliabilityPolicy, QoSDurabilityPolicy
 
 class Arm(Node):
@@ -15,10 +16,10 @@ class Arm(Node):
         Creates client, then waits for service request
         '''
         super().__init__("ARM")
-        self.cli = self.create_client(CommandBool,'/mavros/cmd/arming')
+        self.cli = self.create_client(SetBool,'bluerov2/arming')
         while not self.cli.wait_for_service(timeout_sec = 1.0):
             self.get_logger().info('service not available, waiting again...')
-        self.req = CommandBool.Request()
+        self.req = SetBool.Request()
 
     def arm_request(self, value):
         '''
@@ -28,6 +29,13 @@ class Arm(Node):
         self.req.value = value
         self.future = self.cli.call_async(self.req)
         return self.future
+
+    def destroy_node(self):
+        disarm_future = self.arm_request(False)
+        rclpy.spin_until_future_complete(self, disarm_future)
+        self.get_logger().info("Disarmed before shutting down the node")
+        super().destroy_node()
+
 
 def main(args = None):
     rclpy.init(args=args)
@@ -41,8 +49,6 @@ def main(args = None):
         node.destroy_node()
         if rclpy.ok():
             rclpy.shutdown()
-    # time.sleep(5)
-    # arm(node,False)
     node.destroy_node()
     if rclpy.ok():
         rclpy.shutdown()
