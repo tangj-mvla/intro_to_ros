@@ -3,7 +3,6 @@
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import FluidPressure
-from mavros_msgs.msg import ParamValue
 from mavros_msgs.msg import Altitude 
 
 '''
