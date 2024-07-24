@@ -4,22 +4,22 @@ launch:
     pkg: "rosmav"
     exec: "ros_bluerov2_interface"
     name: "bluerov2"
-    namespace: "bluerov2"
+    namespace: ""
   
 # - node:
 #     pkg: "intro_to_ros"
 #     exec: "arm"
 #     name: "arm"
-#     namespace: "bluerov2"
+#     namespace: ""
 
 # - node:
 #     pkg: "intro_to_ros"
 #     exec: "movement"
 #     name: "movement"
-#     namespace: "bluerov2"
+#     namespace: ""
 
 - node:
     pkg: "intro_to_ros"
     exec: "depth"
     name: "depth"
-    namespace: "bluerov2" 
+    namespace: "" 
