@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import numpy as np 
 import rclpy
 from rclpy.node import Node
 from mavros_msgs.msg import Altitude, ManualControl
@@ -8,12 +7,14 @@ class depthControl(Node):
     '''
     node to control depth based on PID control calculations
 
-    integral + proportional + derivative
+    PID = integral + proportional + derivative
     '''
     error_accumulator = 0
     previous_error = 0
+    t1 = 0
+    t2 = 0
     def __init__(self):
-        super().__init("depthControl")
+        super().__init__("depthControl")
         self.measuredDepth = self.create_subscription(
             Altitude,
             "bluerov2/depth",
@@ -36,26 +37,32 @@ class depthControl(Node):
         self.get_logger().info("Starting publsher")
         self.measured_depth = Altitude()
         self.desired_depth = Altitude()
+        
+        self.timer = self.create_timer(0.01, self.depth_control)
 
     def measuredDepthCallback(self, msg):
         self.measured_depth = msg
-        self.depth_control(1)
+        # self.depth_control(1)
+        self.t1 = self.t2
+        self.t2 = msg.header.stamp.sec
         self.get_logger().info(f"\nMeasured Depth: {msg.local}")
         
-    def desiredDepthCallback(self,msg):
+    def desiredDepthCallback(self, msg):
         self.desired_depth = msg
-        self.depth_control(1)
+        # self.depth_control(1)
         self.get_logger().info(f"\nDesired Depth: {msg.local}")
     
-    def depth_control(self, dt):
+    def depth_control(self):
         # initial part, getting value, ect
         measured_position = self.measured_depth.local
-        desired_position = self.desired_depth.local
-        
+        #desired_position = self.desired_depth.local
+        desired_position = 0.5
+        dt = self.t2.sec-self.t1.sec
         # proportional control
         Kp = 1.0
         error = desired_position - measured_position
         self.proportional = Kp * error
+        self.get_logger().info(f"\nProportional: {self.proportional}")
 
         # integral control
         Ki = 1.0
@@ -63,15 +70,18 @@ class depthControl(Node):
         self.error_accumulator += error * dt # DT = TIME SINCE LAST UPDATE
         
         self.integral = min(Ki * self.error_accumulator, 1.0) # PREVENTS INTEGRAL WINDUP PAST 1.0
+        self.get_logger().info(f"\nIntegral: {self.integral}")
 
         # derivative control
         Kd = 1.0
         self.derivative = Kd * (error - self.previous_error) / dt 
         self.previous_error = error
+        self.get_logger().info(f"\nDerivative: {self.derivative}")
 
-        # add all & publish        
-        self.pid = self.proportional + self.integral + self.derivative
-        self.getlogger().info(f"PID: {self.pid}")
+        # add all & publish 
+        #        
+        self.pid = (self.proportional + self.integral + self.derivative) * 1
+        self.get_logger().info(f"\nPID: {self.pid}")
         msg = ManualControl()
         
         msg.z = self.pid

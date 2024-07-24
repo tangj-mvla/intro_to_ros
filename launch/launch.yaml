@@ -6,11 +6,11 @@ launch:
     name: "bluerov2"
     namespace: ""
   
-# - node:
-#     pkg: "intro_to_ros"
-#     exec: "arm"
-#     name: "arm"
-#     namespace: ""
+- node:
+    pkg: "intro_to_ros"
+    exec: "arm"
+    name: "arm"
+    namespace: ""
 
 # - node:
 #     pkg: "intro_to_ros"
@@ -23,3 +23,9 @@ launch:
     exec: "depth"
     name: "depth"
     namespace: "" 
+
+- node:
+    pkg: "intro_to_ros"
+    exec: "depth_control"
+    name: "depth_control"
+    namespace: ""

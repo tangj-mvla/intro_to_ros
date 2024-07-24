@@ -53,10 +53,9 @@ class DepthCalculate(Node):
         depth = (recorded_pressure - atmospheric_pressure)/(water_density * g)
         self.get_logger().info(f"\nPressure: {recorded_pressure}\nCalculated Depth: {depth}")
         msg = Altitude()
+        msg.header.stamp = self.get_clock().now().to_msg()
         msg.local = depth
         self.publisher.publish(msg)
-
-
 
 def main(args = None):
     rclpy.init(args = args)
