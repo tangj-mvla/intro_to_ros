@@ -6,19 +6,21 @@ from sensor_msgs.msg import FluidPressure
 from mavros_msgs.msg import ParamValue
 from mavros_msgs.msg import Altitude 
 
-
+'''
+Notes: 
+- fwd slash indicates fixed name
+'''
 
 '''Node to Find the Pressure'''
-"""
-Pressure (pascals) ---> depth (meters)
-
-depth = (recorded pressure - at)ospheric pressure/
-(water density * gravity)
-"""
 
 class DepthCalculate(Node): 
 
     def __init__(self):
+        """
+        subscribing to pressure
+       
+        publishing depth (altitude)
+        """
         super().__init__("Depth")
         self.subscriber = self.create_subscription(
             FluidPressure,
@@ -33,20 +35,29 @@ class DepthCalculate(Node):
         )
         self.get_logger().info("Starting Subscriber")
 
+
     def depth_calculate(self, msg):
+        """
+        Converting pressure to depth
+
+        depth = (recorded pressure - atmospheric pressure)/(water density * gravity)
+
+        recorded_pressure, atmospheric_pressure = pascals
+        water_density = m^3
+        gravity = m/s^2
+        """
         recorded_pressure = msg.fluid_pressure
-        
         atmospheric_pressure = 101325
         water_density = 1000
         g = 9.81
+        
         depth = (recorded_pressure - atmospheric_pressure)/(water_density * g)
         self.get_logger().info(f"\nPressure: {recorded_pressure}\nCalculated Depth: {depth}")
         msg = Altitude()
         msg.local = depth
         self.publisher.publish(msg)
 
-    # def destroy_node(self):
-    #     super.destroy_node()
+
 
 def main(args = None):
     rclpy.init(args = args)
@@ -60,5 +71,6 @@ def main(args = None):
         if rclpy.ok():
             rclpy.shutdown()
 
-
+if __name__=="__main__":
+    main()
             
