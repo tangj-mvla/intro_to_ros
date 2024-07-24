@@ -19,15 +19,14 @@ class Arm(Node):
         self.cli = self.create_client(SetBool,'bluerov2/arming')
         while not self.cli.wait_for_service(timeout_sec = 1.0):
             self.get_logger().info('service not available, waiting again...')
-        self.req = SetBool.Request()
+        # self.req = SetBool.Request()
 
     def arm_request(self, value):
         '''
         Arming Request, assigns value to request
         asynchronously calls
         '''
-        self.req.value = value
-        self.future = self.cli.call_async(self.req)
+        self.future = self.cli.call_async(SetBool.Request(data=value))
         return self.future
 
     def destroy_node(self):

@@ -1,4 +1,6 @@
 from setuptools import find_packages, setup
+import os
+from glob import glob
 
 package_name = 'intro_to_ros'
 
@@ -10,6 +12,10 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (
+            os.path.join("share", package_name, "launch"),
+            glob(os.path.join("launch", "*launch.[pxy][yma]*")),
+        ),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -23,7 +29,8 @@ setup(
 # 'subscriber = intro_to_ros.subscriber:main',
 'bluerov2_sensors = intro_to_ros.bluerov2_sensors:main',
 'arm = intro_to_ros.arm:main',
-'movement = intro_to_ros.movement:main'
+'movement = intro_to_ros.movement:main',
+'depth = intro_to_ros.pressure:main'
         ],
     },
 )

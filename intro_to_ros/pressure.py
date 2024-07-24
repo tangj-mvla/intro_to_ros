@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 
 import rclpy
-import time
-import math
 from rclpy.node import Node
 from sensor_msgs.msg import FluidPressure
-u
+
 
 
 '''Node to Find the Pressure'''
@@ -24,6 +22,10 @@ class DepthCalculate(Node):
             FluidPressure,
             "bluerov2/pressure",
             self.depth_calculate,
+            10
+        )
+        self.publisher = self.create_publisher(
+            
         )
         self.get_logger().info("Starting Subscriber")
 
@@ -34,17 +36,22 @@ class DepthCalculate(Node):
         water_density = 1000
         g = 9.81
         depth = (recorded_pressure - atmospheric_pressure)/(water_density * g)
-        self.get_logger().info(f"Pressure: {recorded_pressure}\nCalculated Depth: {depth}")
-               
+        self.get_logger().info(f"Pressure: {recorded_pressure}\nCalculated Depth: {depth}\n\n")
+
+    # def destroy_node(self):
+    #     super.destroy_node()
 
 def main(args = None):
     rclpy.init(args = args)
     node = DepthCalculate()
     try:
-        rclpy.spin()
+        rclpy.spin(node)
     except KeyboardInterrupt:
         print("\nKeyboardInterrupt received, shutting down...")
     finally:
-        node.destrooy_node()
+        node.destroy_node()
         if rclpy.ok():
             rclpy.shutdown()
+
+
+            
