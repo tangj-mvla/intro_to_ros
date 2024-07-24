@@ -30,7 +30,7 @@ setup(
 'bluerov2_sensors = intro_to_ros.bluerov2_sensors:main',
 'arm = intro_to_ros.arm:main',
 'movement = intro_to_ros.movement:main',
-'depth = intro_to_ros.pressure:main'
+'depth = intro_to_ros.depth:main'
         ],
     },
 )

@@ -3,6 +3,7 @@
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import FluidPressure
+from mavros_msgs.msg import ParamValue
 
 
 
@@ -25,7 +26,9 @@ class DepthCalculate(Node):
             10
         )
         self.publisher = self.create_publisher(
-            
+            ParamValue,
+            "bluerov2/depth",
+            10
         )
         self.get_logger().info("Starting Subscriber")
 
@@ -37,6 +40,9 @@ class DepthCalculate(Node):
         g = 9.81
         depth = (recorded_pressure - atmospheric_pressure)/(water_density * g)
         self.get_logger().info(f"Pressure: {recorded_pressure}\nCalculated Depth: {depth}\n\n")
+        msg = ParamValue()
+        msg.real = depth
+        self.publisher.publish(msg)
 
     # def destroy_node(self):
     #     super.destroy_node()
