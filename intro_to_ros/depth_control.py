@@ -67,25 +67,24 @@ class depthControl(Node):
         self.get_logger().info(f"\n\nt1: {self.t1}")
         self.get_logger().info(f"\nt2: {self.t2}")
         self.get_logger().info(f"\ndt: {dt}")
-        # if (dt == 0 or self.t1 == 0): # fix div by 0 problem
-        #     return
+        # constants
+        Kp = 150.0
+        Ki = 190.0
+        Kd = 190.0
         # proportional control
-        Kp = 175.0
         error = desired_position - measured_position
         self.get_logger().info(f"\nError: {error}")
         self.proportional = Kp * error
         self.get_logger().info(f"\nProportional: {self.proportional}")
 
         # integral control
-        Ki = 175.0
         # self.integral = self.desired_depth - measured_position
         self.error_accumulator += error * dt # DT = TIME SINCE LAST UPDATE
         self.get_logger().info(f"\nError Accumulator: {self.error_accumulator}")
-        self.integral = min(Ki * self.error_accumulator, 1.0) # PREVENTS INTEGRAL WINDUP PAST 1.0 & -1.0
+        self.integral = min(Ki * self.error_accumulator, 6.0) # PREVENTS INTEGRAL WINDUP PAST 1.0 & -1.0
         self.get_logger().info(f"\nIntegral: {self.integral}")
 
         # derivative control
-        Kd = 175.0
         if (dt == 0): 
             self.derivative = 0
         else:
