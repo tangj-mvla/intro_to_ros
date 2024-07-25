@@ -49,13 +49,13 @@ class depthControl(Node):
 
     def measuredDepthCallback(self, msg):
         self.measured_depth = msg
-        self.depth_control()
         if (self.t1 == 0):
             self.t1 = msg.header.stamp.sec + msg.header.stamp.nanosec*1e-9
             self.t2 = msg.header.stamp.sec + msg.header.stamp.nanosec*1e-9
         else:
             self.t1 = self.t2
             self.t2 = msg.header.stamp.sec + msg.header.stamp.nanosec*1e-9
+        self.depth_control()
         self.get_logger().info(f"\nMeasured Depth: {msg.local}")
         
     def desiredDepthCallback(self, msg):

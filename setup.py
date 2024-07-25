@@ -31,7 +31,8 @@ setup(
 'arm = intro_to_ros.arm:main',
 'movement = intro_to_ros.movement:main',
 'depth = intro_to_ros.depth:main',
-'depth_control = intro_to_ros.depth_control:main'
+'depth_control = intro_to_ros.depth_control:main',
+'heading_control = intro_to_ros.heading_control:main'
         ],
     },
 )

@@ -24,8 +24,13 @@ launch:
     name: "depth"
     namespace: "" 
 
+# - node:
+#     pkg: "intro_to_ros"
+#     exec: "depth_control"
+#     name: "depth_control"
+#     namespace: ""
 - node:
     pkg: "intro_to_ros"
-    exec: "depth_control"
-    name: "depth_control"
+    exec: "heading_control"
+    name: "heading_control"
     namespace: ""
