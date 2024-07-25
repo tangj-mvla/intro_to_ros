@@ -13,8 +13,14 @@ class depthControl(Node):
     previous_error = 0
     t1 = 0
     t2 = 0
+    max_integral = 6.0
+    max_throttle = 100.0
+    desired_position = None
+    
     def __init__(self):
+
         super().__init__("depthControl")
+        
         self.measuredDepth = self.create_subscription(
             Altitude,
             "bluerov2/depth",
@@ -53,35 +59,35 @@ class depthControl(Node):
         self.get_logger().info(f"\nMeasured Depth: {msg.local}")
         
     def desiredDepthCallback(self, msg):
-        self.desired_depth = msg
-        self.depth_control()
+        self.desired_position = msg.local
         self.get_logger().info(f"\nDesired Depth: {msg.local}")
     
     def depth_control(self):
         msg = ManualControl()
         # initial part, getting value, ect
         measured_position = self.measured_depth.local #og local
-        desired_position = self.desired_depth.local
-        desired_position = 0.5
+        # self.desired_position = self.desired_depth
+        self.get_logger().info(f"\nDesired Depth: {self.desired_position}")
+        if (self.desired_position is None): return
+        # desired_position = 0.5
         dt = self.t2 - self.t1
         self.get_logger().info(f"\n\nt1: {self.t1}")
         self.get_logger().info(f"\nt2: {self.t2}")
         self.get_logger().info(f"\ndt: {dt}")
         # constants
         Kp = 150.0
-        Ki = 190.0
-        Kd = 190.0
+        Ki = 250.0
+        Kd = 300.0
         # proportional control
-        error = desired_position - measured_position
+        error = self.desired_position - measured_position
         self.get_logger().info(f"\nError: {error}")
         self.proportional = Kp * error
         self.get_logger().info(f"\nProportional: {self.proportional}")
 
         # integral control
-        # self.integral = self.desired_depth - measured_position
         self.error_accumulator += error * dt # DT = TIME SINCE LAST UPDATE
         self.get_logger().info(f"\nError Accumulator: {self.error_accumulator}")
-        self.integral = min(Ki * self.error_accumulator, 6.0) # PREVENTS INTEGRAL WINDUP PAST 1.0 & -1.0
+        self.integral = min(max(Ki * self.error_accumulator,-self.max_integral), self.max_integral) # PREVENTS INTEGRAL WINDUP PAST 1.0 & -1.0
         self.get_logger().info(f"\nIntegral: {self.integral}")
 
         # derivative control
@@ -94,11 +100,9 @@ class depthControl(Node):
         self.get_logger().info(f"\nDerivative: {self.derivative}")
 
         # add all & publish 
-        msg.x = 0.0
-        msg.y = 0.0
-        msg.z = 0.0
-        msg.r = 0.0
-        msg.z = float((self.proportional + self.integral + self.derivative) * -1) + 50
+        msg.z = float((self.proportional + self.integral + self.derivative) * -1)
+        msg.z = min(max(msg.z, -self.max_throttle), self.max_throttle)
+
         self.get_logger().info(f"\nPID: {msg.z}")
         self.publisher.publish(msg)
         
