@@ -40,7 +40,7 @@ class depthControl(Node):
             "bluerov2/manual_control",
             10
         )
-        self.get_logger().info("Starting publsher")
+        self.get_logger().info("Starting publisher")
         self.measured_depth = Altitude()
         self.desired_depth = Altitude()
         self.previous_error = 0.0

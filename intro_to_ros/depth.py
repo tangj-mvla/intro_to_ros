@@ -51,7 +51,7 @@ class DepthCalculate(Node):
         g = 9.81
         
         depth = (recorded_pressure - atmospheric_pressure)/(water_density * g)
-        self.get_logger().info(f"\nPressure: {recorded_pressure}\nCalculated Depth: {depth}")
+        # self.get_logger().info(f"\nPressure: {recorded_pressure}\nCalculated Depth: {depth}")
         msg = Altitude()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.local = depth
