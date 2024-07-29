@@ -13,19 +13,35 @@ from sensor_msgs.msg import Image
 import numpy as np
 
 class TagSubscriber(Node):
+
+    heading = None
+    image = None
+
     def __init__(self):
         super().__init__("TagSubscriber")
         
+        self.heading_subscriber = self.create_subscription(
+            Int16,
+            "bluerov2/heading",
+            self.headingCallback,
+            10
+        )
+
         self.apriltag_subscriber = self.create_subscription(
             Image, 
             "bluerov2/camera", 
             self.apriltagCallback, 
-            10 
+            10
         )
 
-    def apriltagCallback(self, msg): 
-        self.cvb = CvBridge()
-        msg = self.cvb.cv2_to_imgmsg(, encoding="bgr8")
+        self.desired_heading_publisher = self.create_publisher(
+            Int16,
+            "bluerov2/desired_heading",
+            10
+        )
+
+    def headingCallback(self,msg):
+        self.heading = msg.data
 
     def process_frame(self,frame):
         """
@@ -114,5 +130,43 @@ class TagSubscriber(Node):
         cap.release()
         plt.close()
 
-    # Run the function to process the video
-    process_video_iterative('pool_video.mp4')
+    def calc_horiz_angle(img, tag): 
+        "Calculating the Horizontal Angle - 80 is the Field of View (Horizontal)"
+        x = tag.center[0]
+        return 80 * (x-img.shape[1]/2)/img.shape[1]
+
+    def calc_rel_angle(img, tag): 
+        "Calculating the relative Angle - 64 is the Field of View (Vert)"
+        y = tag.center[1]
+        return 64*(y-img.shape[0]/2)/img.shape[0]
+
+    def calc_dist(img, tag): 
+        return np.linalg.norm(tag.pose_t)
+        
+    def apriltagCallback(self, msg): 
+        bridge = CvBridge()
+        img = self.cvb.cv2_to_imgmsg(detection, encoding="bgr8")
+
+        tags = at_detector.detect(img, estimate_tag_pose=False, camera_params=None, tag_size=None)
+        for tag in tags:
+            x_angle = self.calc_hori_angle(tag)
+            y_angle = self.calc_rel_angle(tag)
+            z_distance = self.calc_dist(tag)
+            self.logger(f"x Angle: {x_angle}, y Angle: {y_angle}, Distance: {z_distance}")
+
+def main(args=None):
+    rclpy.init(args=args)
+
+    node = TagSubscriber()
+
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.try_shutdown()
+
+
+if __name__ == "__main__":
+    main()        
