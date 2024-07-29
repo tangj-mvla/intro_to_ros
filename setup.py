@@ -32,7 +32,9 @@ setup(
 'movement = intro_to_ros.movement:main',
 'depth = intro_to_ros.depth:main',
 'depth_control = intro_to_ros.depth_control:main',
-'heading_control = intro_to_ros.heading_control:main'
+'heading_control = intro_to_ros.heading_control:main',
+'lane_subscriber = intro_to_ros.lane_subscriber:main',
+'tag_subscriber = intro_to_ros.tag_subscriber:main'
         ],
     },
 )

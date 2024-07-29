@@ -106,36 +106,19 @@ class HeadingControl(Node):
         self.error = self.error * Kp * 100/180
         # self.error = 360 / (1 + math.pow(2.7182,(self.error * 3.1415 * -0.01))) - 180
 
-        # dt = self.t2 - self.t1
-        # self.get_logger().info(f"\n\nt1: {self.t1}")
-        # self.get_logger().info(f"\nt2: {self.t2}")
-        # self.get_logger().info(f"\ndt: {dt}")
         # proportional control
         self.get_logger().info(f"\nError: {self.error}")
         self.proportional = Kp * self.error
         self.get_logger().info(f"\nProportional: {self.proportional}")
 
-        # integral control
-        # self.error_accumulator += self.error * dt # DT = TIME SINCE LAST UPDATE
-        # self.get_logger().info(f"\nError Accumulator: {self.error_accumulator}")
-        # self.integral = min(max(Ki * self.error_accumulator,-self.max_integral), self.max_integral) # PREVENTS INTEGRAL WINDUP PAST 1.0 & -1.0
-        # self.get_logger().info(f"\nIntegral: {self.integral}")
 
-        # derivative control
-        # if (dt == 0): 
-        #     self.derivative = 0
-        # else:
-        #     self.derivative = Kd * (self.error - self.previous_error) / dt 
-        #     self.previous_error = self.error
-        #     self.get_logger().info(f"\nPrevious Error: {self.previous_error}")
-        #     self.get_logger().info(f"\nDerivative: {self.derivative}")
         self.derivative = self.measured_imu * 180 / 3.1415 * Kd
         self.get_logger().info(f"\nDerivative: {self.derivative}")
         # add all & publish 
         # msg.r = float((self.proportional + self.integral + self.derivative) * -1)
         msg.r = float((self.proportional + self.derivative) * 1)
         msg.r = min(max(msg.r, -self.max_throttle), self.max_throttle)
-        msg.r = 1.6667
+        msg.r = 14.0
         self.get_logger().info(f"\nPID: {msg.r}")
         self.publisher.publish(msg)
 
