@@ -78,10 +78,13 @@ class LaneSubscriber(Node):
         lanes = self.detect_lanes(lines)
         middleLanes = self.get_lane_center(lanes)
         recommendation = self.recommendation(middleLanes)
+        self.get_logger().info("PUBLISHING")
         if (recommendation == "left"):
             self.desired_heading_publisher.publish(self.heading-10)
         elif (recommendation == "right"):
             self.desired_heading_publisher.publish(self.heading+10)
+        else:
+            self.desired_heading_publisher.publish(self.heading)
 
     def detect_lines(self,img, threshold1 = 10, threshold2 = 20, apertureSize = 3, minLineLength = 800, maxLineGap = 100):
         '''

@@ -108,9 +108,6 @@ class TagSubscriber(Node):
     def process_video_iterative(self,video_path):
         """
         Processes a video, displaying and detecting AprilTags every 1000 frames.
-
-        Args:
-            video_path (str): The path to the video file.
         """
         cap = cv2.VideoCapture(video_path)
         frame_count = 0
@@ -119,17 +116,16 @@ class TagSubscriber(Node):
             isTrue, frame = cap.read()
             if not isTrue:
                 break
-            
+                
             frame_count += 1
-            
-            if frame_count % 1000 == 0:
+                
+            if frame_count % 400 == 0:
                 gblur, gray = self.process_frame(frame)
-                detection = self.detect_april_tags(gray)
-                self.display_frame(detection, title='Grayscale Frame')
-            
-        cap.release()
-        plt.close()
-
+                at_detection = self.detect_april_tags(gray)
+                self.display_frame(at_detection)
+                
+            cap.release()
+            plt.close()
     def calc_horiz_angle(img, tag): 
         "Calculating the Horizontal Angle - 80 is the Field of View (Horizontal)"
         x = tag.center[0]
@@ -145,9 +141,9 @@ class TagSubscriber(Node):
         
     def apriltagCallback(self, msg): 
         bridge = CvBridge()
-        img = self.cvb.cv2_to_imgmsg(at_detecter, encoding="bgr8")
+        img = self.cvb.cv2_to_imgmsg(msg, encoding="bgr8")
 
-        tags = at_detector.detect(img, estimate_tag_pose=False, camera_params=None, tag_size=None)
+        tags = msg.detect(img, estimate_tag_pose=False, camera_params=None, tag_size=None)
         for tag in tags:
             x_angle = self.calc_hori_angle(tag)
             y_angle = self.calc_rel_angle(tag)
@@ -158,7 +154,6 @@ def main(args=None):
     rclpy.init(args=args)
 
     node = TagSubscriber()
-
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:

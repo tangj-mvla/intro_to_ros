@@ -5,6 +5,12 @@ launch:
     exec: "ros_bluerov2_interface"
     name: "bluerov2"
     namespace: ""
+
+# - node:
+#     pkg: "rosmav"
+#     exec: "bluerov2_camera_interface"
+#     name: "bluerov2_camera"
+#     namespace: ""
   
 - node:
     pkg: "intro_to_ros"
@@ -33,4 +39,10 @@ launch:
     pkg: "intro_to_ros"
     exec: "heading_control"
     name: "heading_control"
+    namespace: ""
+
+- node:
+    pkg: "intro_to_ros"
+    exec: "lane_subscriber"
+    name: "lane_subscriber"
     namespace: ""

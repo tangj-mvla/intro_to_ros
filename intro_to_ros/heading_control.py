@@ -118,7 +118,6 @@ class HeadingControl(Node):
         # msg.r = float((self.proportional + self.integral + self.derivative) * -1)
         msg.r = float((self.proportional + self.derivative) * 1)
         msg.r = min(max(msg.r, -self.max_throttle), self.max_throttle)
-        msg.r = 14.0
         self.get_logger().info(f"\nPID: {msg.r}")
         self.publisher.publish(msg)
 

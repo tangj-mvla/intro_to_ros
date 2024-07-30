@@ -13,7 +13,7 @@ class depthControl(Node):
     previous_error = 0
     t1 = 0
     t2 = 0
-    max_integral = 4.0
+    max_integral = 1.0
     max_throttle = 100.0
     desired_depth = None
     measured_depth = None
@@ -52,29 +52,28 @@ class depthControl(Node):
             self.t1 = self.t2
             self.t2 = msg.header.stamp.sec + msg.header.stamp.nanosec*1e-9
         self.depth_control()
-        self.get_logger().info(f"\nMeasured Depth: {msg.local}")
         
     def desiredDepthCallback(self, msg):
         self.desired_depth = msg
-        self.get_logger().info(f"\nDesired Depth: {msg.local}")
+        # self.get_logger().info(f"\nDesired Depth: {msg.local}")
     
     def depth_control(self):
         msg = ManualControl()
         # initial part, getting value, ect
+        if (self.measured_depth == None or self.desired_depth == None):
+            return
         measured_position = self.measured_depth.local #og local
         self.desired_position = self.desired_depth.local
         # self.desired_position = self.desired_depth
+        self.get_logger().info(f"\nMeasured Depth: {measured_position}")
         self.get_logger().info(f"\nDesired Depth: {self.desired_position}")
         if (self.desired_position is None): return
         # desired_position = 0.5
         dt = self.t2 - self.t1
-        self.get_logger().info(f"\n\nt1: {self.t1}")
-        self.get_logger().info(f"\nt2: {self.t2}")
-        self.get_logger().info(f"\ndt: {dt}")
         # constants
-        Kp = 55.0
-        Ki = 7.0
-        Kd = 15.0
+        Kp = -150.0
+        Ki = -20.0
+        Kd = -50.0
         # proportional control
         error = self.desired_position - measured_position
         self.get_logger().info(f"\nError: {error}")
@@ -97,7 +96,7 @@ class depthControl(Node):
         self.get_logger().info(f"\nDerivative: {self.derivative}")
 
         # add all & publish 
-        msg.z = float((self.proportional + self.integral + self.derivative) * -1)
+        msg.z = float((self.proportional + self.integral + self.derivative) * 1)
         msg.z = min(max(msg.z, -self.max_throttle), self.max_throttle)
 
         self.get_logger().info(f"\nPID: {msg.z}")
