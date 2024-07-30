@@ -16,6 +16,11 @@ class LaneSubscriber(Node):
     heading = None
 
     def __init__(self):
+        '''
+        Initiallizes a Lane Subscriber Node
+        Subscribes to heading and camera
+        publishes to desired heading
+        '''
         super().__init__("LaneSubscriber")
 
         self.cvb = CvBridge()
@@ -41,15 +46,31 @@ class LaneSubscriber(Node):
         )
 
     def headingSubscriberCallback(self,msg):
+        '''
+        Heading Subscriber Callback
+        Assigns message data to heading attribute
+
+        msg: the message from the callback
+        '''
         self.heading = msg.data
-        self.rotation()
     
     def imageCallback(self,msg):
+        '''
+        Image subscriber callback
+        converts image message to cv2 image
+        calls rotation/recommendation function
+
+        msg: the message from the callback
+        '''
         image = self.cvb.imgmsg_to_cv2(msg)
         self.image = image
         self.rotation()
 
     def rotation(self):
+        '''
+        calls functions to determine which way to rotate
+        to follow the lane
+        '''
         if (self.image == None or self.heading == None):
             return
         img = self.image.data
@@ -63,6 +84,18 @@ class LaneSubscriber(Node):
             self.desired_heading_publisher.publish(self.heading+10)
 
     def detect_lines(self,img, threshold1 = 10, threshold2 = 20, apertureSize = 3, minLineLength = 800, maxLineGap = 100):
+        '''
+        Detects lines in the image
+
+        img: the Image to analyze
+        threshold1: First threshold of cv2.Canny
+        threshold2: Second threshold of cv2.Canny
+        aperture: the aperture size for the computer to use
+        minLineLength: the min line length allowed and added to lines array
+        maxLineGap: the maximum line gap between lines in the picture
+
+        returns lines: an array of coordinates of lines
+        '''
         gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
         edges = cv2.Canny(gray, threshold1 = threshold1, threshold2 = threshold2, apertureSize = apertureSize) # detect edges
         lines = cv2.HoughLinesP(
@@ -76,18 +109,40 @@ class LaneSubscriber(Node):
         return lines
 
     def get_slopes_intercepts(self,lines):
-            slopes = []
-            intercepts = []
-            for line in lines:
-                x1,y1,x2,y2 = line[0]
-                slope = (y2-y1)/(x2-x1)
-                inverse_slope = (x2-x1)/(y2-y1)
-                intercept = x1 - y1*inverse_slope
-                slopes.append(slope)
-                intercepts.append(intercept)
-            return slopes, intercepts
+        '''
+        Gets the slopes and intercepts from an array of lines
+
+        lines: an array of lines with two coordinates to define each line
+
+        returns:
+        slopes: an array of the slopes of the respective lines
+        intercepts: an array of the x-intercepts of the respective lines
+        '''
+        slopes = []
+        intercepts = []
+        for line in lines:
+            x1,y1,x2,y2 = line[0]
+            slope = (y2-y1)/(x2-x1)
+            inverse_slope = (x2-x1)/(y2-y1)
+            intercept = x1 - y1*inverse_slope
+            slopes.append(slope)
+            intercepts.append(intercept)
+        return slopes, intercepts
         
     def detect_lanes(self,lines):
+        '''
+        detects the lanes of the pool
+        Steps:
+        1. Group lines based on the slope
+        2. Create one line for each group by finding the min coordinate and the max coordinate
+        3. Sort lines based on slope so that it goes from barely neg to abs neg to abs pos to barely pos
+        4. Find lanes by looking at how close two lines are at the y-value of 2000 and determining which lines form which lanes
+
+        lines: a list of the lines defined by two coordinates
+
+        returns:
+        lanes: a list of the lanes defined by two lines
+        '''
         # group lines based on slope
         slopes,intercepts = self.get_slopes_intercepts(lines)
         linesGroup = []
@@ -172,6 +227,14 @@ class LaneSubscriber(Node):
         return lanes
 
     def get_lane_center(self,lanes):
+        '''
+        Finds the center of a lane by averaging the coordinates of the two lines
+
+        lanes: the list of lanes defined by two lines
+
+        returns:
+        middleLanes: a list of lines that are the average of the two lines that define the lane
+        '''
         middleLanes = []
         for lane in lanes:
             line1,line2 = lane[0], lane[1]
@@ -187,6 +250,14 @@ class LaneSubscriber(Node):
         return middleLanes
     
     def recommendation(self,middleLanes):
+        '''
+        creates a recommendation based on the closest lane
+
+        middleLanes: the list of lines that form the middle of the lanes
+
+        returns:
+        a string that tells which way to go
+        '''
         intercept = float('inf')
         slope = float('inf')
         for line in middleLanes:

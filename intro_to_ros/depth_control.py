@@ -13,9 +13,10 @@ class depthControl(Node):
     previous_error = 0
     t1 = 0
     t2 = 0
-    max_integral = 6.0
+    max_integral = 4.0
     max_throttle = 100.0
-    desired_position = None
+    desired_depth = None
+    measured_depth = None
     
     def __init__(self):
 
@@ -41,11 +42,6 @@ class depthControl(Node):
             10
         )
         self.get_logger().info("Starting publisher")
-        self.measured_depth = Altitude()
-        self.desired_depth = Altitude()
-        self.previous_error = 0.0
-        
-        # self.timer = self.create_timer(0.01, self.depth_control)
 
     def measuredDepthCallback(self, msg):
         self.measured_depth = msg
@@ -59,13 +55,14 @@ class depthControl(Node):
         self.get_logger().info(f"\nMeasured Depth: {msg.local}")
         
     def desiredDepthCallback(self, msg):
-        self.desired_position = msg.local
+        self.desired_depth = msg
         self.get_logger().info(f"\nDesired Depth: {msg.local}")
     
     def depth_control(self):
         msg = ManualControl()
         # initial part, getting value, ect
         measured_position = self.measured_depth.local #og local
+        self.desired_position = self.desired_depth.local
         # self.desired_position = self.desired_depth
         self.get_logger().info(f"\nDesired Depth: {self.desired_position}")
         if (self.desired_position is None): return
@@ -75,9 +72,9 @@ class depthControl(Node):
         self.get_logger().info(f"\nt2: {self.t2}")
         self.get_logger().info(f"\ndt: {dt}")
         # constants
-        Kp = 150.0
-        Ki = 250.0
-        Kd = 300.0
+        Kp = 55.0
+        Ki = 7.0
+        Kd = 15.0
         # proportional control
         error = self.desired_position - measured_position
         self.get_logger().info(f"\nError: {error}")

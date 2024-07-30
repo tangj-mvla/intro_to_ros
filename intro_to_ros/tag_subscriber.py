@@ -145,7 +145,7 @@ class TagSubscriber(Node):
         
     def apriltagCallback(self, msg): 
         bridge = CvBridge()
-        img = self.cvb.cv2_to_imgmsg(detection, encoding="bgr8")
+        img = self.cvb.cv2_to_imgmsg(at_detecter, encoding="bgr8")
 
         tags = at_detector.detect(img, estimate_tag_pose=False, camera_params=None, tag_size=None)
         for tag in tags:
