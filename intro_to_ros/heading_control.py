@@ -63,7 +63,7 @@ class HeadingControl(Node):
         #     self.t2 = msg.header.stamp.sec + msg.header.stamp.nanosec*1e-9
         
         # self.power_calculations()
-        self.get_logger().info(f"\nMeasured Heading: {self.measured_heading}")
+        # self.get_logger().info(f"\nMeasured Heading: {self.measured_heading}")
 
     def measuredImuCallback(self,msg):
         """
@@ -78,7 +78,7 @@ class HeadingControl(Node):
             self.t2 = msg.header.stamp.sec + msg.header.stamp.nanosec*1e-9
         
         self.power_calculations()
-        self.get_logger().info(f"\nMeasured Angular Velocity: {self.measured_imu}")
+        # self.get_logger().info(f"\nMeasured Angular Velocity: {self.measured_imu}")
 
     def desiredHeadingCallback(self,msg):
         self.desired_heading = msg.data

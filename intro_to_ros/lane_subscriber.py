@@ -9,6 +9,7 @@ from cv_bridge import CvBridge
 from sensor_msgs.msg import Imu
 from sensor_msgs.msg import Image
 import numpy as np
+import time
 
 class LaneSubscriber(Node):
 
@@ -62,31 +63,38 @@ class LaneSubscriber(Node):
 
         msg: the message from the callback
         '''
-        image = self.cvb.imgmsg_to_cv2(msg)
+        image = self.cvb.imgmsg_to_cv2(msg, desired_encoding = "bgr8")
         self.image = image
+
         self.rotation()
+        time.sleep(1)
 
     def rotation(self):
         '''
         calls functions to determine which way to rotate
         to follow the lane
         '''
-        if (self.image == None or self.heading == None):
+        if (self.heading == None):
             return
-        img = self.image.data
+        img = self.image
         lines = self.detect_lines(img)
+        # if (lines == None):
+        #     return
+        if (len(lines) == 0):
+            return
         lanes = self.detect_lanes(lines)
+        if (len(lanes) == 0):
+            return
         middleLanes = self.get_lane_center(lanes)
         recommendation = self.recommendation(middleLanes)
         self.get_logger().info("PUBLISHING")
-        if (recommendation == "left"):
-            self.desired_heading_publisher.publish(self.heading-10)
-        elif (recommendation == "right"):
-            self.desired_heading_publisher.publish(self.heading+10)
-        else:
-            self.desired_heading_publisher.publish(self.heading)
+        msg = Int16()
+        msg.data = self.heading + recommendation
+        cv2.imwrite("testfile.png",self.image)
 
-    def detect_lines(self,img, threshold1 = 10, threshold2 = 20, apertureSize = 3, minLineLength = 800, maxLineGap = 100):
+        self.desired_heading_publisher.publish(msg)
+
+    def detect_lines(self,img, threshold1 = 20, threshold2 = 30, apertureSize = 3, minLineLength = 400, maxLineGap = 50):
         '''
         Detects lines in the image
 
@@ -100,16 +108,22 @@ class LaneSubscriber(Node):
         returns lines: an array of coordinates of lines
         '''
         gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-        edges = cv2.Canny(gray, threshold1 = threshold1, threshold2 = threshold2, apertureSize = apertureSize) # detect edges
+        edges = cv2.Canny(gray, threshold1 = int(threshold1), threshold2 = int(threshold2), apertureSize = apertureSize) # detect edges
+        lines = None
         lines = cv2.HoughLinesP(
                         edges,
                         1,
                         np.pi/180,
-                        100,
-                        minLineLength = minLineLength,
-                        maxLineGap = maxLineGap,
+                        50,
+                        minLineLength = int(minLineLength),
+                        maxLineGap = int(maxLineGap),
                 ) # detect lines
         return lines
+
+    def draw_lines(self,img,lines, color = (255,0,0)):
+        for line in lines:
+            x1, y1, x2, y2 = line[0]
+            cv2.line(img, (x1, y1), (x2, y2), color, 2)
 
     def get_slopes_intercepts(self,lines):
         '''
@@ -147,6 +161,7 @@ class LaneSubscriber(Node):
         lanes: a list of the lanes defined by two lines
         '''
         # group lines based on slope
+        self.get_logger().info(f"LENGTH OF LINES: {len(lines)}")
         slopes,intercepts = self.get_slopes_intercepts(lines)
         linesGroup = []
         for i in range(len(lines)):
@@ -259,7 +274,7 @@ class LaneSubscriber(Node):
         middleLanes: the list of lines that form the middle of the lanes
 
         returns:
-        a string that tells which way to go
+        desired heading change in degrees
         '''
         intercept = float('inf')
         slope = float('inf')
@@ -270,11 +285,22 @@ class LaneSubscriber(Node):
             if (np.abs(laneIntercept-3824/2) < np.abs(intercept-3824/2)):
                 intercept = laneIntercept
                 slope = laneSlope
-        if (np.abs(intercept-3824/2) < 250):
-            return "forward"
-        if (slope < 0):
-            return "left"
-        return "right"
+        return np.degrees(np.arctan(1.0/slope))
+    
+    def draw_lanes(self,img, lanes):
+        middleLanes = []
+        for lane in lanes:
+            line1,line2 = lane[0], lane[1]
+            x1, y1, x2, y2 = line1[0]
+            line1x1,line1y1,line1x2,line1y2 = line1[0]
+            line2x1,line2y1,line2x2,line2y2 = line2[0]
+            # average points
+            x1 = (line1x1 + line2x1)/2
+            y1 = (line1y1 + line2y1)/2
+            x2 = (line1x2 + line2x2)/2
+            y2 = (line1y2 + line2y2)/2
+            cv2.line(img, (int(x1), int(y1)), (int(x2), int(y2)), (0,255,0), 2)
+            middleLanes.append(np.array([[x1,y1,x2,y2]]))
     
 def main(args = None):
     rclpy.init(args = args)

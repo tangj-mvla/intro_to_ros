@@ -11,15 +11,19 @@ from std_msgs.msg import Int16
 from sensor_msgs.msg import Imu
 from sensor_msgs.msg import Image
 import numpy as np
+import time
 
 class TagSubscriber(Node):
 
     heading = None
     image = None
+    at_detector = None
 
     def __init__(self):
         super().__init__("TagSubscriber")
         
+        self.cvb = CvBridge()
+
         self.heading_subscriber = self.create_subscription(
             Int16,
             "bluerov2/heading",
@@ -40,8 +44,72 @@ class TagSubscriber(Node):
             10
         )
 
+        self.at_detector = Detector(families='tag36h11',
+                            nthreads=1,
+                            quad_decimate=1.0,
+                            quad_sigma=0.0,
+                            refine_edges=1,
+                            decode_sharpening=0.25,
+                            debug=0)
+
     def headingCallback(self,msg):
         self.heading = msg.data
+
+    def detect_april_tags(self,frame):
+        """
+        Detects AprilTags in the given frame and draws lines and IDs on the detected tags.
+
+        Args:
+            frame (numpy.ndarray): The input frame in grayscale format.
+
+        Returns:
+            numpy.ndarray: The frame with detected AprilTags drawn.
+        """
+        # Initialize the AprilTag detector
+        tags = self.at_detector.detect(frame, estimate_tag_pose=True, camera_params=[1000,1000,frame.shape[1]/2,frame.shape[0]/2], tag_size=0.1)
+        return tags
+
+    def outline_tags(self,frame, tags): 
+        color_frame = frame
+        for tag in tags:
+            for idx in range(len(tag.corners)):
+                cv2.line(color_frame, tuple(tag.corners[idx - 1, :].astype(int)), tuple(tag.corners[idx, :].astype(int)), (0, 255, 0))
+
+            cv2.putText(color_frame, str(tag.tag_id),
+                        org=(tag.corners[0, 0].astype(int) + 10, tag.corners[0, 1].astype(int) + 10),
+                        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                        fontScale=0.8,
+                        color=(0, 0, 255))
+        return color_frame                         
+        
+    def calc_horiz_angle(self,img, tag): 
+        "Calculating the Horizontal Angle - 80 is the Field of View (Horizontal)"
+        x = tag.center[0]
+        return 80 * (x-img.shape[1]/2)/img.shape[1]
+
+    def calc_rel_angle(self,img, tag): 
+        "Calculating the relative Angle - 64 is the Field of View (Vert)"
+        y = tag.center[1]
+        return 64*(y-img.shape[0]/2)/img.shape[0]
+
+    def calc_dist(self,img, tag): 
+        return np.linalg.norm(tag.pose_t)
+        
+    def apriltagCallback(self, msg):
+        img = self.cvb.imgmsg_to_cv2(msg, desired_encoding="bgr8")
+        gblur, gray = self.process_frame(img)
+        tags = self.detect_april_tags(gray)
+        color_frame = self.outline_tags(img,tags)
+        
+        for tag in tags:
+            x_angle = self.calc_horiz_angle(img,tag)
+            y_angle = self.calc_rel_angle(img,tag)
+            z_distance = self.calc_dist(img,tag)
+            self.get_logger().info(f"x Angle: {x_angle}, y Angle: {y_angle}, Distance: {z_distance}")
+        
+        color_frame = self.outline_tags(img,tags)
+        cv2.imwrite("tagframe.png",color_frame)
+        time.sleep(1)
 
     def process_frame(self,frame):
         """
@@ -71,40 +139,6 @@ class TagSubscriber(Node):
         plt.show()
         plt.pause(0.001)  # Pause to allow the image to be displayed
 
-    def detect_april_tags(self,frame):
-        """
-        Detects AprilTags in the given frame and draws lines and IDs on the detected tags.
-
-        Args:
-            frame (numpy.ndarray): The input frame in grayscale format.
-
-        Returns:
-            numpy.ndarray: The frame with detected AprilTags drawn.
-        """
-        # Initialize the AprilTag detector
-        at_detector = Detector(families='tag36h11',
-                            nthreads=1,
-                            quad_decimate=1.0,
-                            quad_sigma=0.0,
-                            refine_edges=1,
-                            decode_sharpening=0.25,
-                            debug=0)
-
-        tags = at_detector.detect(frame, estimate_tag_pose=False, camera_params=None, tag_size=None)
-        color_frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2RGB)
-
-        for tag in tags:
-            for idx in range(len(tag.corners)):
-                cv2.line(color_frame, tuple(tag.corners[idx - 1, :].astype(int)), tuple(tag.corners[idx, :].astype(int)), (0, 255, 0))
-
-            cv2.putText(color_frame, str(tag.tag_id),
-                        org=(tag.corners[0, 0].astype(int) + 10, tag.corners[0, 1].astype(int) + 10),
-                        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-                        fontScale=0.8,
-                        color=(0, 0, 255))
-        
-        return color_frame
-
     def process_video_iterative(self,video_path):
         """
         Processes a video, displaying and detecting AprilTags every 1000 frames.
@@ -126,29 +160,6 @@ class TagSubscriber(Node):
                 
             cap.release()
             plt.close()
-    def calc_horiz_angle(img, tag): 
-        "Calculating the Horizontal Angle - 80 is the Field of View (Horizontal)"
-        x = tag.center[0]
-        return 80 * (x-img.shape[1]/2)/img.shape[1]
-
-    def calc_rel_angle(img, tag): 
-        "Calculating the relative Angle - 64 is the Field of View (Vert)"
-        y = tag.center[1]
-        return 64*(y-img.shape[0]/2)/img.shape[0]
-
-    def calc_dist(img, tag): 
-        return np.linalg.norm(tag.pose_t)
-        
-    def apriltagCallback(self, msg): 
-        bridge = CvBridge()
-        img = self.cvb.cv2_to_imgmsg(msg, encoding="bgr8")
-
-        tags = msg.detect(img, estimate_tag_pose=False, camera_params=None, tag_size=None)
-        for tag in tags:
-            x_angle = self.calc_hori_angle(tag)
-            y_angle = self.calc_rel_angle(tag)
-            z_distance = self.calc_dist(tag)
-            self.logger(f"x Angle: {x_angle}, y Angle: {y_angle}, Distance: {z_distance}")
 
 def main(args=None):
     rclpy.init(args=args)

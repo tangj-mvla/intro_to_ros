@@ -6,17 +6,17 @@ launch:
     name: "bluerov2"
     namespace: ""
 
-# - node:
-#     pkg: "rosmav"
-#     exec: "bluerov2_camera_interface"
-#     name: "bluerov2_camera"
-#     namespace: ""
-  
 - node:
-    pkg: "intro_to_ros"
-    exec: "arm"
-    name: "arm"
+    pkg: "rosmav"
+    exec: "bluerov2_camera_interface"
+    name: "bluerov2_camera"
     namespace: ""
+  
+# - node:
+#     pkg: "intro_to_ros"
+#     exec: "arm"
+#     name: "arm"
+#     namespace: ""
 
 # - node:
 #     pkg: "intro_to_ros"
@@ -41,8 +41,14 @@ launch:
     name: "heading_control"
     namespace: ""
 
+# - node:
+#     pkg: "intro_to_ros"
+#     exec: "lane_subscriber"
+#     name: "lane_subscriber"
+#     namespace: ""
+
 - node:
     pkg: "intro_to_ros"
-    exec: "lane_subscriber"
-    name: "lane_subscriber"
+    exec: "tag_subscriber"
+    name: "tag_subscriber"
     namespace: ""
