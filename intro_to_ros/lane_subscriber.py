@@ -91,18 +91,17 @@ class LaneSubscriber(Node):
             return
         middleLanes = self.get_lane_center(lanes)
         recommendation = self.recommendation(middleLanes)
-        self.get_logger().info("PUBLISHING")
         msg = Int16()
         msg.data = self.heading + int(recommendation)
 
-        # self.draw_lines(self.image,lines)
+        self.draw_lines(self.image,lines)
         # self.draw_lanes(self.image,lanes)
 
         cv2.imwrite("testfile.png",self.image)
 
         self.desired_heading_publisher.publish(msg)
 
-    def detect_lines(self,img, threshold1 = 150, threshold2 = 200, apertureSize = 3, minLineLength = 400, maxLineGap = 50):
+    def detect_lines(self,img, threshold1 = 150, threshold2 = 250, apertureSize = 3, minLineLength = 400, maxLineGap = 50):
         '''
         Detects lines in the image
 
@@ -117,6 +116,7 @@ class LaneSubscriber(Node):
         '''
         gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
         edges = cv2.Canny(gray, threshold1 = int(threshold1), threshold2 = int(threshold2), apertureSize = apertureSize) # detect edges
+        # cv2.imwrite("testfile.png",edges)
         lines = None
         lines = cv2.HoughLinesP(
                         edges,
@@ -169,7 +169,6 @@ class LaneSubscriber(Node):
         lanes: a list of the lanes defined by two lines
         '''
         # group lines based on slope
-        self.get_logger().info(f"LENGTH OF LINES: {len(lines)}")
         slopes,intercepts = self.get_slopes_intercepts(lines)
         linesGroup = []
         for i in range(len(lines)):

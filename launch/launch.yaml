@@ -41,14 +41,14 @@ launch:
 #     name: "heading_control"
 #     namespace: ""
 
-# - node:
-#     pkg: "intro_to_ros"
-#     exec: "lane_subscriber"
-#     name: "lane_subscriber"
-#     namespace: ""
-
 - node:
     pkg: "intro_to_ros"
-    exec: "tag_subscriber"
-    name: "tag_subscriber"
+    exec: "lane_subscriber"
+    name: "lane_subscriber"
     namespace: ""
+
+# - node:
+#     pkg: "intro_to_ros"
+#     exec: "tag_subscriber"
+#     name: "tag_subscriber"
+#     namespace: ""
