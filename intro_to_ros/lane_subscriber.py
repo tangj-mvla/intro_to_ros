@@ -64,8 +64,12 @@ class LaneSubscriber(Node):
         msg: the message from the callback
         '''
         image = self.cvb.imgmsg_to_cv2(msg, desired_encoding = "bgr8")
-        self.image = image
+        # image = image[320:640,0:480]
+        # blur = cv2.GaussianBlur(image,(33,33),0)
+        # kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+        # sharpened = cv2.filter2D(image, -1, kernel)
 
+        self.image = image
         self.rotation()
         time.sleep(1)
 
@@ -89,12 +93,16 @@ class LaneSubscriber(Node):
         recommendation = self.recommendation(middleLanes)
         self.get_logger().info("PUBLISHING")
         msg = Int16()
-        msg.data = self.heading + recommendation
+        msg.data = self.heading + int(recommendation)
+
+        # self.draw_lines(self.image,lines)
+        # self.draw_lanes(self.image,lanes)
+
         cv2.imwrite("testfile.png",self.image)
 
         self.desired_heading_publisher.publish(msg)
 
-    def detect_lines(self,img, threshold1 = 20, threshold2 = 30, apertureSize = 3, minLineLength = 400, maxLineGap = 50):
+    def detect_lines(self,img, threshold1 = 150, threshold2 = 200, apertureSize = 3, minLineLength = 400, maxLineGap = 50):
         '''
         Detects lines in the image
 

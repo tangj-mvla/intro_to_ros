@@ -54,6 +54,7 @@ class TagSubscriber(Node):
 
     def headingCallback(self,msg):
         self.heading = msg.data
+        
 
     def detect_april_tags(self,frame):
         """
@@ -96,6 +97,7 @@ class TagSubscriber(Node):
         return np.linalg.norm(tag.pose_t)
         
     def apriltagCallback(self, msg):
+        "generating image and identifying the april tag while also creating moving the robot to match heading with actual location of april tag"
         img = self.cvb.imgmsg_to_cv2(msg, desired_encoding="bgr8")
         gblur, gray = self.process_frame(img)
         tags = self.detect_april_tags(gray)
@@ -106,10 +108,20 @@ class TagSubscriber(Node):
             y_angle = self.calc_rel_angle(img,tag)
             z_distance = self.calc_dist(img,tag)
             self.get_logger().info(f"x Angle: {x_angle}, y Angle: {y_angle}, Distance: {z_distance}")
+            desired_heading = x_angle + self.heading #or would this be + instead of - (x_angle +) 
+            desired_heading = desired_heading % 360 
+
+            self.desired_heading_publisher.publish(Int16(data=int(desired_heading)))
+            self.get_logger().info(f"current heading: {self.heading}, desired heading: {desired_heading}")
         
         color_frame = self.outline_tags(img,tags)
         cv2.imwrite("tagframe.png",color_frame)
         time.sleep(1)
+
+        if self.heading is None:
+            self.get_logger().warning("Current heading is not available.")
+            return
+        
 
     def process_frame(self,frame):
         """
